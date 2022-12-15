@@ -54,3 +54,5 @@ bin/
 
 *.toggletasks.json
 /.vscode
+/.idea
+/cmake-build-debug
