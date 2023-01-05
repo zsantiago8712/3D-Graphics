@@ -8,7 +8,8 @@
 
 #include "Window/Window.h"
 #include "Renderer/Renderer.h"
-
+#include "Camera/Camera.h"
+#include "Entity/Entity.h"
 
 
 
@@ -17,8 +18,10 @@ struct App{
 
     struct Window *window;
     struct Renderer *renderer;
+    struct Camera *camera;
     SDL_Event event;
 
+    struct Entity *entity;
 };
 
 

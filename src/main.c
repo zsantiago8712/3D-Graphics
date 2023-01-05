@@ -1,15 +1,13 @@
 #include "App/App.h"
 
-
-
-
 int main(void) {
 
-    struct App app;
 
-    init_app(&app);
+  struct App app;
 
-    app_run(&app);
+  init_app(&app);
 
-    app_destroy(&app);
+  app_run(&app);
+
+  app_destroy(&app);
 }

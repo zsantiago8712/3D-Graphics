@@ -56,3 +56,5 @@ bin/
 /.vscode
 /.idea
 /cmake-build-debug
+/.cache
+compile_commands.json
