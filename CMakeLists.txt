@@ -21,6 +21,8 @@ add_library(Mesh STATIC src/Mesh.c)
 
 add_library(Entity STATIC src/Entity.c)
 
+add_library(Memory STATIC src/Memory.c)
+
 target_include_directories(App
         PUBLIC
         ${PROJECT_SOURCE_DIR}/include
@@ -54,6 +56,10 @@ target_include_directories(Files
         ${PROJECT_SOURCE_DIR}/include
         )
 
+target_include_directories(Memory
+        PUBLIC
+        ${PROJECT_SOURCE_DIR}/include
+        )
 
 
 target_include_directories(Mesh
@@ -83,5 +89,6 @@ target_link_libraries(
         Files
         Mesh
         Entity
+        Memory
         ${SDL2_LIBRARIES} "-framework Cocoa"
 )

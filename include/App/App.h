@@ -22,6 +22,9 @@ struct App{
     SDL_Event event;
 
     struct Entity *entity;
+
+    // TODO TEST!!
+    struct Entities *entities;
 };
 
 

@@ -14,24 +14,6 @@ static void changeValues(Vec3 *vec, const float x, const float y, const float z)
 
 
 
-void create_cube(struct Cube *cube) {
-
-  int index_vectors = 0;
-
-  for (float x = -1; x <= 1; x += 0.25f) {
-
-	for (float y = -1; y <= 1; y += 0.25f) {
-
-	  for (float z = -1; z <= 1; z += 0.25f) {
-
-		changeValues(&cube->points[index_vectors], x, y, z);
-		index_vectors++;
-	  }
-
-	}
-  }
-
-}
 
 
 

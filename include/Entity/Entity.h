@@ -5,6 +5,19 @@
 #include "Mesh/Mesh.h"
 
 
+struct Entities {
+
+    struct Meshes *mesh;
+    unsigned int num_entites;
+};
+
+
+
+struct Entities *init_entities(const char** files_names, const unsigned int num_entities);
+struct Entities *free_entities(struct Entities *entities);
+void create_entities(const char** files_names, struct Entities* entities);
+
+
 struct Entity {
 
     struct Mesh *mesh;

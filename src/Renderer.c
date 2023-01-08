@@ -3,6 +3,7 @@
 //
 
 #include "Renderer/Renderer.h"
+#include "Entity/Entity.h"
 #include "Math/Vector.h"
 #include "Window/Window.h"
 #include <SDL2/SDL.h>
@@ -27,7 +28,8 @@ static void draw_pixel(unsigned int *color_buffer, int window_width,
 static void render_grid(struct Renderer *renderer, int width, int height,
                         unsigned int color, unsigned int grid);
 
-void render(struct Renderer *renderer, struct Entity const *entity,
+
+void render(struct Renderer *renderer, struct Entities const *entities,
             const int width, const int height) {
 
 
@@ -38,21 +40,21 @@ void render(struct Renderer *renderer, struct Entity const *entity,
 
   SDL_RenderClear(renderer->ptr_sdl_renderer);
 
-  for (int i = 0; i < entity->mesh->num_faces; i++) {
+  for (int i = 0; i < entities->mesh->faces->num_faces[0]; i++) {
 
-	x_rectangle = (int) (entity->mesh->traingle_to_render[i].points[0].x + (float) width / 2);
-	y_rectangle = (int)(entity->mesh->traingle_to_render[i].points[0].y + (float) height / 2);
+	x_rectangle = (int) (entities->mesh->triangles[0][i].points[0].x + (float) width / 2);
+	y_rectangle = (int)(entities->mesh->triangles[0][i].points[0].y + (float) height / 2);
 
     draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
                    y_rectangle,0XFFFF00);
 
-	x_rectangle = (int) (entity->mesh->traingle_to_render[i].points[1].x + (float) width / 2);
-	y_rectangle = (int)(entity->mesh->traingle_to_render[i].points[1].y + (float) height / 2);
+	x_rectangle = (int) (entities->mesh->triangles[0][i].points[1].x + (float) width / 2);
+	y_rectangle = (int)(entities->mesh->triangles[0][i].points[1].y + (float) height / 2);
 	draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
 				   y_rectangle,0XFFFF00);
 
-	x_rectangle = (int) (entity->mesh->traingle_to_render[i].points[2].x + (float) width / 2);
-	y_rectangle = (int)(entity->mesh->traingle_to_render[i].points[2].y + (float) height / 2);
+	x_rectangle = (int) (entities->mesh->triangles[0][i].points[2].x + (float) width / 2);
+	y_rectangle = (int)(entities->mesh->triangles[0][i].points[2].y + (float) height / 2);
 	draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
 				   y_rectangle,0XFFFF00);
   }
@@ -64,6 +66,10 @@ void render(struct Renderer *renderer, struct Entity const *entity,
 
   SDL_RenderPresent(renderer->ptr_sdl_renderer);
 }
+
+
+
+
 
 struct Renderer *init_render(struct Window *window) {
 

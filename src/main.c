@@ -1,6 +1,9 @@
 #include "App/App.h"
 
+
+
 int main(void) {
+
 
 
   struct App app;
@@ -10,4 +13,5 @@ int main(void) {
   app_run(&app);
 
   app_destroy(&app);
+
 }

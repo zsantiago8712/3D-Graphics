@@ -19,6 +19,8 @@ struct Renderer {
 };
 
 
+
+
 struct Renderer *init_render(struct Window *window);
 
 void renderer_destroy(struct Renderer *renderer);
@@ -29,8 +31,8 @@ void clear_color_buffer(struct Renderer *renderer, int width,
                         int height, unsigned int color);
 
 
-void render(struct Renderer *renderer, struct Entity const *entity, const int width, const int height);
-
+void render(struct Renderer *renderer, struct Entities const *entities,
+		int width, int height);
 
 Vec2 projection (Vec3 position, float camara_z_position, float fov);
 
