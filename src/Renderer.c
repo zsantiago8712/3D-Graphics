@@ -7,6 +7,8 @@
 #include "Math/Vector.h"
 #include "Window/Window.h"
 #include <SDL2/SDL.h>
+#include <math.h>
+#include <stdlib.h>
 
 /**
  *
@@ -28,10 +30,22 @@ static void draw_pixel(unsigned int *color_buffer, int window_width,
 static void render_grid(struct Renderer *renderer, int width, int height,
                         unsigned int color, unsigned int grid);
 
+static void draw_line(unsigned int *color_buffer, const int window_width,
+                      const int window_height, const unsigned int x0,
+                      const unsigned int y0, const unsigned int x1,
+                      const unsigned int y1, const unsigned int color);
+
+static void draw_triangle(unsigned int *color_buffer, const int window_width,
+                          const int window_height, const unsigned int x0,
+                          const unsigned int y0, const unsigned x1,
+                          const unsigned y1, const unsigned int x2,
+                          const unsigned y2, const unsigned color);
+
+
+
 
 void render(struct Renderer *renderer, struct Entities const *entities,
             const int width, const int height) {
-
 
   int x_rectangle;
   int y_rectangle;
@@ -42,23 +56,26 @@ void render(struct Renderer *renderer, struct Entities const *entities,
 
   for (int i = 0; i < entities->mesh->faces->num_faces[0]; i++) {
 
-	x_rectangle = (int) (entities->mesh->triangles[0][i].points[0].x + (float) width / 2);
-	y_rectangle = (int)(entities->mesh->triangles[0][i].points[0].y + (float) height / 2);
+    draw_rectangle(renderer, width, height, 3, 3,
+                   entities->mesh->triangles[0][i].points[0].x,
+                   entities->mesh->triangles[0][i].points[0].y, 0XFF0000);
 
-    draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
-                   y_rectangle,0XFFFF00);
+    draw_rectangle(renderer, width, height, 3, 3,
+                   entities->mesh->triangles[0][i].points[1].x,
+                   entities->mesh->triangles[0][i].points[1].y, 0XFF0000);
 
-	x_rectangle = (int) (entities->mesh->triangles[0][i].points[1].x + (float) width / 2);
-	y_rectangle = (int)(entities->mesh->triangles[0][i].points[1].y + (float) height / 2);
-	draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
-				   y_rectangle,0XFFFF00);
+    draw_rectangle(renderer, width, height, 3, 3,
+                   entities->mesh->triangles[0][i].points[2].x,
+                   entities->mesh->triangles[0][i].points[2].y, 0XFF0000);
 
-	x_rectangle = (int) (entities->mesh->triangles[0][i].points[2].x + (float) width / 2);
-	y_rectangle = (int)(entities->mesh->triangles[0][i].points[2].y + (float) height / 2);
-	draw_rectangle(renderer, width, height, 3, 3, x_rectangle,
-				   y_rectangle,0XFFFF00);
+    draw_triangle(renderer->color_buffer, width, height,
+                  entities->mesh->triangles[0][i].points[0].x,
+                  entities->mesh->triangles[0][i].points[0].y,
+                  entities->mesh->triangles[0][i].points[1].x,
+                  entities->mesh->triangles[0][i].points[1].y,
+                  entities->mesh->triangles[0][i].points[2].x,
+                  entities->mesh->triangles[0][i].points[2].y, 0x296E01);
   }
-
 
   render_grid(renderer, width, height, 0xFFFFFF, 10);
   render_color_buffer(renderer, width);
@@ -66,10 +83,6 @@ void render(struct Renderer *renderer, struct Entities const *entities,
 
   SDL_RenderPresent(renderer->ptr_sdl_renderer);
 }
-
-
-
-
 
 struct Renderer *init_render(struct Window *window) {
 
@@ -171,6 +184,17 @@ static void draw_rectangle(struct Renderer *renderer, const int window_width,
   }
 }
 
+static void draw_triangle(unsigned int *color_buffer, const int window_width,
+                          const int window_height, const unsigned int x0,
+                          const unsigned int y0, const unsigned x1,
+                          const unsigned y1, const unsigned int x2,
+                          const unsigned y2, const unsigned color) {
+
+  draw_line(color_buffer, window_width, window_height, x0, y0, x1, y1, color);
+  draw_line(color_buffer, window_width, window_height, x1, y1, x2, y2, color);
+  draw_line(color_buffer, window_width, window_height, x2, y2, x0, y0, color);
+}
+
 static unsigned int *create_color_buffer(const int width, const int height) {
 
   unsigned int *color_buffer =
@@ -209,10 +233,44 @@ static void draw_pixel(unsigned int *color_buffer, const int window_width,
   }
 }
 
+static void draw_line(unsigned int *color_buffer, const int window_width,
+                      const int window_height, const unsigned int x0,
+                      const unsigned int y0, const unsigned int x1,
+                      const unsigned int y1, const unsigned int color) {
+
+  const int delta_x = (x1 - x0);
+  const int delta_y = (y1 - y0);
+
+  const unsigned int lenght_side =
+      (abs(delta_x) >= abs(delta_y)) ? abs(delta_x) : abs(delta_y);
+
+  const float x_inc = delta_x / (float)lenght_side;
+  const float y_inc = delta_y / (float)lenght_side;
+
+  float current_x = (float)x0;
+  float current_y = (float)y0;
+
+  for (int i = 0; i <= lenght_side; i++) {
+    draw_pixel(color_buffer, window_width, window_height, roundf(current_x),
+               roundf(current_y), color);
+    current_x += x_inc;
+    current_y += y_inc;
+  }
+}
+
 Vec2 projection(const Vec3 position, const float camara_z_position,
                 const float fov) {
+    
+    // Projection orotgonal, es como vemos las cosas 
   Vec2 point = {(position.x * fov) / (position.z - camara_z_position),
                 (position.y * fov) / (position.z - camara_z_position)};
+
+  
+   // Projection ortografica: No importa que tanl lejos este todo, todo es del mismo tamaño
+  // Vec2 point = {(position.x * 128),
+  //               (position.y * 128)};
+  // 
+
 
   return point;
 }

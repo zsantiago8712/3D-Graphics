@@ -4,8 +4,6 @@
 
 int main(void) {
 
-
-
   struct App app;
 
   init_app(&app);
