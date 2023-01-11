@@ -80,7 +80,7 @@ void app_run(struct App *app) {
     app->renderer->previous_frame_time = SDL_GetTicks();
 
     update(app->entities, app->camera, window_width, window_height);
-    render(app->renderer, app->entities, window_width, window_height);
+    render(app->renderer, app->entities->mesh, window_width, window_height);
   }
 }
 
@@ -132,16 +132,18 @@ static void update(struct Entities *entities, struct Camera const *camera,
     for (int j = 0; j < 3; j++) {
 
       transformed_vertex = vec3_rotation_x(&mesh_vertices[j], angle_x);
-      transformed_vertex = vec3_rotation_y(&transformed_vertex, angle_y);
-      transformed_vertex = vec3_rotation_z(&transformed_vertex, angle_z);
-
+      // transformed_vertex = vec3_rotation_y(&transformed_vertex, angle_y);
+      // transformed_vertex = vec3_rotation_z(&transformed_vertex, angle_z);
+      //
       projected_points =
           projection(transformed_vertex, camera->position.z, 640);
+
+
 
       projected_points.x = projected_points.x + ((float)window_width / 2);
       projected_points.y = projected_points.y + ((float)window_height / 2);
 
-      entities->mesh->triangles[0][i].points[j] = projected_points;
+      entities->mesh->triangles->points[0][i][j] = projected_points;
     }
   }
 }

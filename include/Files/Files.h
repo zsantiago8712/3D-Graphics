@@ -26,8 +26,7 @@ typedef enum {
 
 
 // TODO TEST
-void test(const char *file_name, Vec3 **vertices, Vec3 **faces,
-		  unsigned int *num_vertices, unsigned int *num_faces);
+
 
 FILE *open_file(const char* name_file, const FILE_FLAGS flag);
 

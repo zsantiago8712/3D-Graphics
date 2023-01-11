@@ -31,7 +31,6 @@ void create_entities(const char** files_names, struct Entities* entities) {
 				  &entities->mesh->vertices->num_vertices[i],
 				  &entities->mesh->faces->num_faces[i]);
 
-
   }
 }
 

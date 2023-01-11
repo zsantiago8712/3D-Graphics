@@ -1,6 +1,6 @@
 #include "App/App.h"
-
-
+#include "Math/Vector.h"
+#include <stddef.h>
 
 int main(void) {
 
@@ -11,5 +11,4 @@ int main(void) {
   app_run(&app);
 
   app_destroy(&app);
-
 }

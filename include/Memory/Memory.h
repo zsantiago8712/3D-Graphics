@@ -16,29 +16,27 @@ typedef enum {
 
 
 
-
 void init_memory_tracker(void);
 
 
 void *alloc_memory(unsigned int size, MEM_TAG tag);
-
-
-
-
-Vec3 **Vec3_Darray(unsigned int size_j,
-				   unsigned int size_i);
-
-
-struct Triangle **Triangle_Darray(unsigned int size_j,
-								   unsigned int size_i);
-
-
 void *free_memory(void *memory_to_free, unsigned int size_allocated, MEM_TAG tag);
 
 
-Vec3 **free_Vec3_Darray(Vec3 **array, unsigned int size_j, unsigned int size_i);
+void **d2_array(unsigned int x, unsigned int y, unsigned int size_data);
+void **free_2d_array(void** array);
 
-struct Triangle **free_Triangle_Darray(struct Triangle **array, unsigned int size_j, unsigned int size_i);
+
+
+void ***d3_array(unsigned int x,
+				 unsigned int y,
+				 unsigned int z,
+				 unsigned int data_size);
+void ***free_d3_array(void ***array);
+
+
+
+
 
 
 

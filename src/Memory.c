@@ -10,6 +10,27 @@ struct Memory_Tracker {
   unsigned int size_of_memory_allocated[10];
 };
 
+void *malloc1d(size_t dim1_data_size) {
+  void *ptr = malloc(dim1_data_size);
+#if !defined(NDEBUG)
+  if (ptr == NULL && dim1_data_size != 0)
+	fprintf(stderr, "Error: 'malloc1d' failed to allocate %zu bytes.\n", dim1_data_size);
+#endif
+  return ptr;
+}
+
+void **malloc2d(size_t dim1, size_t dim2, size_t data_size) {
+  size_t i, stride;
+  void **ptr;
+  unsigned char *p2;
+  stride = dim2 * data_size;
+  ptr = malloc1d(dim1 * sizeof(void *) + dim1 * stride);
+  p2 = (unsigned char *)(ptr + dim1);
+  for (i = 0; i < dim1; i++)
+	ptr[i] = &p2[i * stride];
+  return ptr;
+}
+
 static struct Memory_Tracker memory_tracker;
 
 /**
@@ -77,73 +98,57 @@ void *free_memory(void *memory_to_free, const unsigned int size_allocated, const
 
 
 
+void **d2_array(const unsigned int x, const unsigned int y, const unsigned int size_data) {
 
-Vec3 **Vec3_Darray(const unsigned int size_j,
-				   const unsigned int size_i) {
+  const unsigned int stride = x * size_data;
+  void **array = (void **)alloc_memory(y * sizeof(void *) + x * stride, ARRAY_NDIMENSION_TYPE);
+  unsigned char *mem = (unsigned char *)(array + y);
 
-  Vec3 *mem = (Vec3 *)alloc_memory(size_j * size_i * sizeof(Vec3), ARRAY_NDIMENSION_TYPE);
-  Vec3 **array = (Vec3 **)alloc_memory(size_i * sizeof(Vec3 *), ARRAY_NDIMENSION_TYPE);
-
-  for (int i = 0; i < size_i; i++) {
-	array[i] = mem + i * size_j;
+  for (unsigned int i = 0; i < y; i++) {
+	array[i] = &mem[i * stride];
   }
 
   return array;
 }
 
-struct Triangle **Triangle_Darray(const unsigned int size_j,
-								  const unsigned int size_i) {
+void **free_2d_array(void **array) {
 
-  struct Triangle *mem = (struct Triangle *)alloc_memory(size_j * size_i * sizeof(struct Triangle), ARRAY_NDIMENSION_TYPE);
-  struct Triangle **array = (struct Triangle **)alloc_memory(size_i * sizeof(struct Triangle *), ARRAY_NDIMENSION_TYPE);
+  free(array);
+  array = NULL;
 
-  for (int i = 0; i < size_i; i++) {
-	array[i] = mem + i * size_j;
+  return array;
+}
+
+void ***d3_array(const unsigned int x,
+				 const unsigned int y,
+				 const unsigned int z,
+				 const unsigned int data_size) {
+
+  const unsigned int stride = x * z * data_size;
+  const unsigned int stride2 = z * data_size;
+
+  void ***array =
+	  alloc_memory(y * sizeof(void **) + y * x * sizeof(void *) + y * stride, ARRAY_NDIMENSION_TYPE);
+  void **ptr = (void **)(array + y);
+
+  unsigned char *mem = (unsigned char *)(ptr + y * x);
+
+  for (unsigned int i = 0; i < y; i++) {
+	array[i] = &ptr[i * x];
+
+	for (unsigned int j = 0; j < x; j++) {
+	  ptr[i * x + j] = &mem[i * stride + stride2 * j];
+	}
   }
 
   return array;
 }
 
-/**
- * @brief Free/Destroy 2D Array
- * @param array - Array of any type
- * @param size_j - Number of Columns
- * @param size_i - Number of Rows
- * @param size_type - Size of type variable of the array
- * @return array - Array free
- **/
-Vec3 **free_Vec3_Darray(Vec3 **array, const unsigned int size_j, const unsigned int size_i) {
+void ***free_d3_array(void ***array) {
 
-  assert(size_j > 0 && size_i > 0);
-  if (array == NULL) {
-	fprintf(stderr, "[WARNING] TRYING TO FREE A MEMORY HAS BEEN FREE\n");
-	return array;
-  }
-
-  array[0] = free_memory(array[0], (size_j * size_i * sizeof(Vec3)), ARRAY_NDIMENSION_TYPE);
-  for (int i = 1; i < size_j; i++) {
-	array[i] = NULL;
-  }
-
-  array = free_memory(array, (sizeof(array) * size_i), ARRAY_NDIMENSION_TYPE);
+  free(array);
+  array = NULL;
 
   return array;
 }
 
-struct Triangle **free_Triangle_Darray(struct Triangle **array, const unsigned int size_j, const unsigned int size_i) {
-
-  assert(size_j > 0 && size_i > 0);
-  if (array == NULL) {
-	fprintf(stderr, "[WARNING] TRYING TO FREE A MEMORY HAS BEEN FREE\n");
-	return array;
-  }
-
-  array[0] = free_memory(array[0], (size_j * size_i * sizeof(struct Triangle)), ARRAY_NDIMENSION_TYPE);
-  for (int i = 1; i < size_j; i++) {
-	array[i] = NULL;
-  }
-
-  array = free_memory(array, (sizeof(array) * size_i), ARRAY_NDIMENSION_TYPE);
-
-  return array;
-}

@@ -44,37 +44,35 @@ static void draw_triangle(unsigned int *color_buffer, const int window_width,
 
 
 
-void render(struct Renderer *renderer, struct Entities const *entities,
-            const int width, const int height) {
+void render(struct Renderer *renderer, struct Meshes const *mesh,
+			const int width, const int height) {
 
-  int x_rectangle;
-  int y_rectangle;
 
   SDL_SetRenderDrawColor(renderer->ptr_sdl_renderer, 0, 0, 0, 255);
 
   SDL_RenderClear(renderer->ptr_sdl_renderer);
 
-  for (int i = 0; i < entities->mesh->faces->num_faces[0]; i++) {
+  for (int i = 0; i <= mesh->faces->num_faces[0]; i++) {
 
-    draw_rectangle(renderer, width, height, 3, 3,
-                   entities->mesh->triangles[0][i].points[0].x,
-                   entities->mesh->triangles[0][i].points[0].y, 0XFF0000);
+	draw_rectangle(renderer, width, height, 3, 3,
+				   mesh->triangles->points[0][i][0].x,
+				   mesh->triangles->points[0][i][0].y, 0XFF0000);
 
-    draw_rectangle(renderer, width, height, 3, 3,
-                   entities->mesh->triangles[0][i].points[1].x,
-                   entities->mesh->triangles[0][i].points[1].y, 0XFF0000);
+	draw_rectangle(renderer, width, height, 3, 3,
+				   mesh->triangles->points[0][i][1].x,
+				   mesh->triangles->points[0][i][1].y, 0XFF0000);
 
-    draw_rectangle(renderer, width, height, 3, 3,
-                   entities->mesh->triangles[0][i].points[2].x,
-                   entities->mesh->triangles[0][i].points[2].y, 0XFF0000);
+	draw_rectangle(renderer, width, height, 3, 3,
+				   mesh->triangles->points[0][i][2].x,
+				   mesh->triangles->points[0][i][2].y, 0XFF0000);
 
-    draw_triangle(renderer->color_buffer, width, height,
-                  entities->mesh->triangles[0][i].points[0].x,
-                  entities->mesh->triangles[0][i].points[0].y,
-                  entities->mesh->triangles[0][i].points[1].x,
-                  entities->mesh->triangles[0][i].points[1].y,
-                  entities->mesh->triangles[0][i].points[2].x,
-                  entities->mesh->triangles[0][i].points[2].y, 0x296E01);
+	draw_triangle(renderer->color_buffer, width, height,
+				  mesh->triangles->points[0][i][0].x,
+				  mesh->triangles->points[0][i][0].y,
+				  mesh->triangles->points[0][i][1].x,
+				  mesh->triangles->points[0][i][1].y,
+				  mesh->triangles->points[0][i][2].x,
+				  mesh->triangles->points[0][i][2].y, 0x296E01);
   }
 
   render_grid(renderer, width, height, 0xFFFFFF, 10);
@@ -83,6 +81,45 @@ void render(struct Renderer *renderer, struct Entities const *entities,
 
   SDL_RenderPresent(renderer->ptr_sdl_renderer);
 }
+
+//
+//void render(struct Renderer *renderer, struct Entities const *entities,
+//            const int width, const int height) {
+//
+//
+//  SDL_SetRenderDrawColor(renderer->ptr_sdl_renderer, 0, 0, 0, 255);
+//
+//  SDL_RenderClear(renderer->ptr_sdl_renderer);
+//
+//  for (int i = 0; i <= entities->mesh->faces->num_faces[0]; i++) {
+//
+//    draw_rectangle(renderer, width, height, 3, 3,
+//                   entities->mesh->triangles->points[0][i][0].x,
+//                   entities->mesh->triangles->points[0][i][0].y, 0XFF0000);
+//
+//    draw_rectangle(renderer, width, height, 3, 3,
+//                   entities->mesh->triangles->points[0][i][1].x,
+//                   entities->mesh->triangles->points[0][i][1].y, 0XFF0000);
+//
+//    draw_rectangle(renderer, width, height, 3, 3,
+//                   entities->mesh->triangles->points[0][i][2].x,
+//                   entities->mesh->triangles->points[0][i][2].y, 0XFF0000);
+//
+//     draw_triangle(renderer->color_buffer, width, height,
+//                   entities->mesh->triangles->points[0][i][0].x,
+//                   entities->mesh->triangles->points[0][i][0].y,
+//                   entities->mesh->triangles->points[0][i][1].x,
+//                   entities->mesh->triangles->points[0][i][1].y,
+//                   entities->mesh->triangles->points[0][i][2].x,
+//                   entities->mesh->triangles->points[0][i][2].y, 0x296E01);
+//  }
+//
+//  render_grid(renderer, width, height, 0xFFFFFF, 10);
+//  render_color_buffer(renderer, width);
+//  clear_color_buffer(renderer, width, height, 0x000000);
+//
+//  SDL_RenderPresent(renderer->ptr_sdl_renderer);
+//}
 
 struct Renderer *init_render(struct Window *window) {
 
