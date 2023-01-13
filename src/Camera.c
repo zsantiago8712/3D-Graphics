@@ -9,7 +9,7 @@
 
 struct Camera *init_camara(void) {
 
-  const Vec3 init_position = {0, 0, -5};
+  const Vec3 init_position = {0, 0, 0};
   struct Camera *camera = malloc(sizeof(struct Camera));
 
   if (camera == NULL) {

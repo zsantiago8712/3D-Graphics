@@ -61,15 +61,3 @@ static unsigned int get_num_of_max_types(const char** files_names, const unsigne
 
     return num_types;
 }
-
-
-struct Entity *free_entity(struct Entity *entity) {
-
-    if(entity != NULL) {
-        entity->mesh = free_mesh(entity->mesh);
-        free(entity);
-        entity = NULL;
-    }
-
-    return entity;
-}

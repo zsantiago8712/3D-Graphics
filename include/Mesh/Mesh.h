@@ -11,6 +11,7 @@
 
 struct Triangles {
     Vec2 ***points;
+    unsigned int num_triangles;
 };
 
 

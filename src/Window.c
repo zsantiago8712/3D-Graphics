@@ -32,8 +32,9 @@ struct Window *init_window(const char window_name[20]) {
     exit(EXIT_FAILURE);
   }
 
-  // NOTA: ESTO HACE QUE SEA PANTALLA COMPLETA PERO NO PUEDES CAMBIAR DE VENTANA HASTA QUE LA CIERRES!!
-//  SDL_SetWindowFullscreen(window->ptr_sdl_window, SDL_WINDOW_FULLSCREEN);
+  // NOTA: ESTO HACE QUE SEA PANTALLA COMPLETA PERO NO PUEDES CAMBIAR DE VENTANA
+  // HASTA QUE LA CIERRES!!
+  //  SDL_SetWindowFullscreen(window->ptr_sdl_window, SDL_WINDOW_FULLSCREEN);
   return window;
 }
 

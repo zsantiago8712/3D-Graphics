@@ -9206,28 +9206,28 @@ FORCE_INLINE int _mm_cmpestro(__m128i a,
 // Compare packed strings in a and b with lengths la and lb using the control in
 // imm8, and returns 1 if any character in a was null, and 0 otherwise.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_cmpestrs
-FORCE_INLINE int _mm_cmpestrs(__m128i a,
-                              int la,
-                              __m128i b,
-                              int lb,
-                              const int imm8)
-{
-    SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
-    return la <= (bound - 1);
-}
-
-// Compare packed strings in a and b with lengths la and lb using the control in
-// imm8, and returns 1 if any character in b was null, and 0 otherwise.
-// https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_cmpestrz
-FORCE_INLINE int _mm_cmpestrz(__m128i a,
-                              int la,
-                              __m128i b,
-                              int lb,
-                              const int imm8)
-{
-    SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
-    return lb <= (bound - 1);
-}
+// FORCE_INLINE int _mm_cmpestrs(__m128i a,
+//                               int la,
+//                               __m128i b,
+//                               int lb,
+//                               const int imm8)
+// {
+//     SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
+//     return la <= (bound - 1);
+// }
+//
+// // Compare packed strings in a and b with lengths la and lb using the control in
+// // imm8, and returns 1 if any character in b was null, and 0 otherwise.
+// // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_cmpestrz
+// FORCE_INLINE int _mm_cmpestrz(__m128i a,
+//                               int la,
+//                               __m128i b,
+//                               int lb,
+//                               const int imm8)
+// {
+//     SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
+//     return lb <= (bound - 1);
+// }
 
 #define SSE2NEON_CMPISTRX_LENGTH(str, len, imm8)                         \
     do {                                                                 \
@@ -9304,25 +9304,25 @@ FORCE_INLINE int _mm_cmpistro(__m128i a, __m128i b, const int imm8)
 // Compare packed strings with implicit lengths in a and b using the control in
 // imm8, and returns 1 if any character in a was null, and 0 otherwise.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_cmpistrs
-FORCE_INLINE int _mm_cmpistrs(__m128i a, __m128i b, const int imm8)
-{
-    SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
-    int la;
-    SSE2NEON_CMPISTRX_LENGTH(a, la, imm8);
-    return la <= (bound - 1);
-}
-
+// FORCE_INLINE int _mm_cmpistrs(__m128i a, __m128i b, const int imm8)
+// {
+//     SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
+//     int la;
+//     SSE2NEON_CMPISTRX_LENGTH(a, la, imm8);
+//     return la <= (bound - 1);
+// }
+//
 // Compare packed strings with implicit lengths in a and b using the control in
 // imm8, and returns 1 if any character in b was null, and 0 otherwise.
 // https://www.intel.com/content/www/us/en/docs/intrinsics-guide/index.html#text=_mm_cmpistrz
-FORCE_INLINE int _mm_cmpistrz(__m128i a, __m128i b, const int imm8)
-{
-    SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
-    int lb;
-    SSE2NEON_CMPISTRX_LENGTH(b, lb, imm8);
-    return lb <= (bound - 1);
-}
-
+// FORCE_INLINE int _mm_cmpistrz(__m128i a, __m128i b, const int imm8)
+// {
+//     SSE2NEON_CMPSTR_SET_UPPER(bound, imm8);
+//     int lb;
+//     SSE2NEON_CMPISTRX_LENGTH(b, lb, imm8);
+//     return lb <= (bound - 1);
+// }
+//
 // Compares the 2 signed 64-bit integers in a and the 2 signed 64-bit integers
 // in b for greater than.
 FORCE_INLINE __m128i _mm_cmpgt_epi64(__m128i a, __m128i b)

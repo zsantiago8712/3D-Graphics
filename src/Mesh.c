@@ -11,7 +11,7 @@ static unsigned int get_num_of_max_types(const char **files_names, unsigned int 
 
 struct Meshes *init_mesh(const unsigned int num_meshes, const unsigned int num_vertices, const unsigned int num_faces) {
 
-  struct Meshes *mesh = (struct Meshes *)alloc_memory(sizeof(struct Mesh), STRUCT_TYPE);
+  struct Meshes *mesh = (struct Meshes *)alloc_memory(sizeof(struct Meshes), STRUCT_TYPE);
   mesh->vertices = init_vertices(num_meshes, num_vertices);
   mesh->faces = init_faces(num_meshes, num_faces);
   mesh->triangles = init_triangles(num_meshes, num_faces);
@@ -69,26 +69,7 @@ static struct Triangles *init_triangles(const unsigned int number_entities, cons
   // struct Triangle **traingles = Triangle_Darray(number_entities, number_triangles);
   struct Triangles *triangles = alloc_memory(sizeof(struct Triangles), STRUCT_TYPE);
   triangles->points = (Vec2 ***) d3_array(number_triangles, number_entities, 3, sizeof(Vec2));
+  triangles->num_triangles = number_triangles;
 
   return triangles;
-}
-
-
-
-struct Mesh *free_mesh(struct Mesh *mesh) {
-
-  if (mesh->mesh_vertices != NULL) {
-	free(mesh->mesh_vertices);
-	mesh->mesh_vertices = NULL;
-  }
-
-  if (mesh->mesh_faces != NULL) {
-	free(mesh->mesh_faces);
-	mesh->mesh_faces = NULL;
-  }
-
-  free(mesh);
-  mesh = NULL;
-
-  return mesh;
 }

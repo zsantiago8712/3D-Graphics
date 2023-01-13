@@ -10,6 +10,7 @@
 
 #include <SDL2/SDL.h>
 #include <stdbool.h>
+#include <stdio.h>
 
 #define FPS 60
 #define FRAME_TARGET (1000 / FPS)
@@ -20,7 +21,7 @@ static void update(struct Entities *entities, struct Camera const *camera,
                    const unsigned int window_width,
                    const unsigned int window_height);
 
-const char *FILES_NAMES[100] = {"assets/f22.obj", "assets/cube2.obj"};
+const char *FILES_NAMES[100] = {"assets/cube.obj", "assets/cube2.obj"};
 
 float angle_x = 0.0f;
 float angle_y = 0.0f;
@@ -34,7 +35,6 @@ void init_app(struct App *app) {
   app->window = init_window("3D-Graphics");
   app->renderer = init_render(app->window);
   app->camera = init_camara();
-
   app->entities = init_entities(FILES_NAMES, 2);
 }
 
@@ -98,8 +98,8 @@ static bool process_input(struct App *app) {
     }
     return true;
 
-    default:
-      return true;
+  default:
+    return true;
   }
 
   return true;
@@ -111,13 +111,13 @@ static void update(struct Entities *entities, struct Camera const *camera,
 
   Vec3 mesh_face;
   Vec3 mesh_vertices[3];
-  Vec3 transformed_vertex;
+  Vec3 transformed_vertex[3];
   Vec2 projected_points;
 
   angle_x += 0.01f;
   angle_y += 0.01f;
   angle_z += 0.01f;
-
+  entities->mesh->triangles->num_triangles = 0;
   for (int i = 0; i < entities->mesh->faces->num_faces[0]; i++) {
 
     mesh_face = entities->mesh->faces->mesh_faces[0][i];
@@ -129,21 +129,50 @@ static void update(struct Entities *entities, struct Camera const *camera,
     mesh_vertices[2] =
         entities->mesh->vertices->mesh_vertices[0][(int)mesh_face.z];
 
+    // TRANSFORMACION
     for (int j = 0; j < 3; j++) {
 
-      transformed_vertex = vec3_rotation_x(&mesh_vertices[j], angle_x);
-      // transformed_vertex = vec3_rotation_y(&transformed_vertex, angle_y);
-      // transformed_vertex = vec3_rotation_z(&transformed_vertex, angle_z);
-      //
-      projected_points =
-          projection(transformed_vertex, camera->position.z, 640);
+      transformed_vertex[j] = vec3_rotation_x(&mesh_vertices[j], angle_x);
+      transformed_vertex[j] = vec3_rotation_y(&transformed_vertex[j], angle_y);
+      transformed_vertex[j] = vec3_rotation_z(&transformed_vertex[j], angle_z);
 
+      transformed_vertex[j].z += 5;
 
+      // transformed_vertex[j].z -= camera->position.z;
+    }
 
-      projected_points.x = projected_points.x + ((float)window_width / 2);
-      projected_points.y = projected_points.y + ((float)window_height / 2);
+    // TODO BACK FACE CULLING
+    //  1) Find Vectors- (B-A) and (C-A)
+    //  2) TAKE THERI CORSS PRODUCT AND FIND PERPENDICULAR NORMAL "N"
+    Vec3 subs_res = vec3_subs(&transformed_vertex[1], &transformed_vertex[0]);
+    Vec3 subs_res2 = vec3_subs(&transformed_vertex[2], &transformed_vertex[0]);
+    Vec3 normal = vec3_crossProduct(&subs_res, &subs_res2);
 
-      entities->mesh->triangles->points[0][i][j] = projected_points;
+    vec3_normalize(&subs_res);
+    vec3_normalize(&subs_res2);
+    vec3_normalize(&normal);
+
+    // 3) Find the vector between the camera origin end the point "A"
+    Vec3 camara_ray = vec3_subs(&camera->position, &transformed_vertex[0]);
+
+    // 4) Calculate how alligned the camera ray is with the face normla using
+    // dot product
+    float normal_camara = vec3_dotProduct(&normal, &camara_ray);
+    if (normal_camara > 0) {
+
+      //  PROJECTION
+      for (int k = 0; k < 3; k++) {
+
+        projected_points = projection(transformed_vertex[k], 640);
+
+        projected_points.x += ((float)window_width / 2);
+        projected_points.y += ((float)window_height / 2);
+        entities->mesh->triangles
+            ->points[0][entities->mesh->triangles->num_triangles][k] =
+            projected_points;
+      }
+
+      entities->mesh->triangles->num_triangles++;
     }
   }
 }

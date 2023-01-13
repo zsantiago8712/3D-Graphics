@@ -11,7 +11,6 @@
 
 struct Camera {
     Vec3 position;
-
 };
 
 

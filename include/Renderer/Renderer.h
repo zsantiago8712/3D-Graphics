@@ -37,6 +37,6 @@ void clear_color_buffer(struct Renderer *renderer, int width,
 void render(struct Renderer *renderer, struct Meshes const *mesh,
 			const int width, const int height);
 
-Vec2 projection (Vec3 position, float camara_z_position, float fov);
 
+Vec2 projection(const Vec3 position, const float fov);
 #endif // INC_3D_GRAPHICS_RENDER_H
