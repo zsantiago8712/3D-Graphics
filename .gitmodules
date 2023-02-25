@@ -1,0 +1,4 @@
+[submodule "App/vendor/LA"]
+	path = App/vendor/LA
+	url = https://github.com/zsantiago8712/LA.git
+	branch = master
